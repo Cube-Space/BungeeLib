@@ -4,14 +4,12 @@ import net.cubespace.lib.CubespacePlugin;
 
 import java.util.Date;
 
-/**
- * Created by Fabian on 23.12.13.
- */
 public class Logger {
     //Hold the LogLevel for this Logger
     private Level logLevel = Level.INFO;
     //Hold the plugin for this Logger (to get access to the ReportManager)
     private CubespacePlugin plugin;
+    protected String prefix = "";
 
     /**
      * Create a new Logger for the Plugin
@@ -38,16 +36,16 @@ public class Logger {
      * @param throwable The Throwable to report
      */
     private void writeExceptionToReport(String logLevel, Throwable throwable) {
-        writeToReport("  [Logger/" + logLevel + "] Exception in Thread \"" + Thread.currentThread().getName() + "\" " + throwable.getClass().getName() + ": " + throwable.getMessage());
+        writeToReport("  " + prefix + "[Logger/" + logLevel + "] Exception in Thread \"" + Thread.currentThread().getName() + "\" " + throwable.getClass().getName() + ": " + throwable.getMessage());
 
         StackTraceElement[] stackTraceElements = throwable.getStackTrace();
         for(StackTraceElement element : stackTraceElements) {
-            writeToReport("  [Logger/" + logLevel + "]   at " + element.getClassName() + "." + element.getMethodName() + "(" + element.getFileName() +":" + element.getLineNumber() +")");
+            writeToReport("  " + prefix + "[Logger/" + logLevel + "]   at " + element.getClassName() + "." + element.getMethodName() + "(" + element.getFileName() +":" + element.getLineNumber() +")");
         }
 
         //Print all Exceptions which are appended on this one
         if(throwable.getCause() != null) {
-            writeToReport("  [Logger/" + logLevel + "] caused by: ");
+            writeToReport("  " + prefix + "[Logger/" + logLevel + "] caused by: ");
             writeExceptionToReport(logLevel, throwable.getCause());
         }
     }
@@ -80,7 +78,7 @@ public class Logger {
 
         //Check if Report is open and if so write this Log Message to it
         if(plugin.getReportManager().isSessionOpen()) {
-            writeToReport("  [Logger/DEBUG] " + message);
+            writeToReport("  " + prefix + "[Logger/DEBUG] " + message);
             writeExceptionToReport("DEBUG", throwable);
         }
 
@@ -99,7 +97,7 @@ public class Logger {
 
         //Check if Report is open and if so write this Log Message to it
         if(plugin.getReportManager().isSessionOpen()) {
-            writeToReport("  [Logger/DEBUG] " + message);
+            writeToReport("  " + prefix + "[Logger/DEBUG] " + message);
         }
 
         //Print the Message to the BungeeCord logger
@@ -118,7 +116,7 @@ public class Logger {
 
         //Check if Report is open and if so write this Log Message to it
         if(plugin.getReportManager().isSessionOpen()) {
-            writeToReport("  [Logger/INFO] " + message);
+            writeToReport("  " + prefix + "[Logger/INFO] " + message);
             writeExceptionToReport("INFO", throwable);
         }
 
@@ -137,7 +135,7 @@ public class Logger {
 
         //Check if Report is open and if so write this Log Message to it
         if(plugin.getReportManager().isSessionOpen()) {
-            writeToReport("  [Logger/INFO] " + message);
+            writeToReport("  " + prefix + "[Logger/INFO] " + message);
         }
 
         //Print the Message to the BungeeCord logger
@@ -156,7 +154,7 @@ public class Logger {
 
         //Check if Report is open and if so write this Log Message to it
         if(plugin.getReportManager().isSessionOpen()) {
-            writeToReport("  [Logger/WARN] " + message);
+            writeToReport("  " + prefix + "[Logger/WARN] " + message);
             writeExceptionToReport("WARN", throwable);
         }
 
@@ -175,7 +173,7 @@ public class Logger {
 
         //Check if Report is open and if so write this Log Message to it
         if(plugin.getReportManager().isSessionOpen()) {
-            writeToReport("  [Logger/WARN] " + message);
+            writeToReport("  " + prefix + "[Logger/WARN] " + message);
         }
 
         //Print the Message to the BungeeCord logger
@@ -194,7 +192,7 @@ public class Logger {
 
         //Check if Report is open and if so write this Log Message to it
         if(plugin.getReportManager().isSessionOpen()) {
-            writeToReport("  [Logger/ERROR] " + message);
+            writeToReport("  " + prefix + "[Logger/ERROR] " + message);
             writeExceptionToReport("ERROR", throwable);
         }
 
@@ -213,7 +211,7 @@ public class Logger {
 
         //Check if Report is open and if so write this Log Message to it
         if(plugin.getReportManager().isSessionOpen()) {
-            writeToReport("  [Logger/ERROR] " + message);
+            writeToReport("  " + prefix + "[Logger/ERROR] " + message);
         }
 
         //Print the Message to the BungeeCord logger
