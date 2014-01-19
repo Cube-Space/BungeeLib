@@ -1,5 +1,5 @@
 name: BungeeLib
 main : net.cubespace.lib.BungeeLibPlugin
-version: 1.4.0
+version: 1.4.1
 author: geNAZt
 depends: [Yamler]
