@@ -26,4 +26,13 @@ public abstract class Module {
      * This function will be used when an Module should be disabled
      */
     public abstract void onDisable();
+
+    /**
+     * Get the parent Plugin which loaded this module
+     *
+     * @return the instance of the Plugin which loaded this module
+     */
+    public CubespacePlugin getPlugin() {
+        return plugin;
+    }
 }
