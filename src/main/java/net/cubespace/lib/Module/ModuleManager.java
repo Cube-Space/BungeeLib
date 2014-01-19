@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.jar.JarEntry;
@@ -22,6 +24,7 @@ public class ModuleManager {
     private Map<String, Module> modules = new HashMap<>();
     private final Yaml yaml = new Yaml();
     private Map<String, ModuleDescription> toLoad = new HashMap<>();
+    private List<ModuleDescription> manualInjection = new ArrayList<>();
 
     public ModuleManager(CubespacePlugin plugin) {
         this.plugin = plugin;
@@ -30,7 +33,7 @@ public class ModuleManager {
     public <T extends Module> T getModule(Class<T> clazz) {
         Preconditions.checkNotNull(clazz, "Class to lookup can not be null");
 
-        for (Map.Entry<String,Module> module : modules.entrySet()) {
+        for (Map.Entry<String, Module> module : modules.entrySet()) {
             if (module.getValue().getClass().equals(clazz)) {
                 return clazz.cast(module.getValue());
             }
@@ -39,8 +42,18 @@ public class ModuleManager {
         return null;
     }
 
+    public void registerModule(ModuleDescription description) {
+        manualInjection.add(description);
+    }
+
     public void loadAndEnableModules() {
         Map<ModuleDescription, Boolean> moduleStatuses = new HashMap<>();
+        for (ModuleDescription entry : manualInjection) {
+            if (!enableModuleManual(moduleStatuses, new Stack<ModuleDescription>(), entry)) {
+                plugin.getPluginLogger().warn("Failed to enable " + entry.getName());
+            }
+        }
+
         for (Map.Entry<String, ModuleDescription> entry : toLoad.entrySet()) {
             ModuleDescription module = entry.getValue();
             if (!enableModule(moduleStatuses, new Stack<ModuleDescription>(), module)) {
@@ -50,6 +63,8 @@ public class ModuleManager {
 
         toLoad.clear();
         toLoad = null;
+        manualInjection.clear();
+        manualInjection = null;
 
         for (Module module : modules.values()) {
             try {
@@ -59,6 +74,32 @@ public class ModuleManager {
                 plugin.getPluginLogger().warn("Exception encountered when loading plugin: " + module.getModuleDescription().getName(), t);
             }
         }
+    }
+
+    private boolean enableModuleManual(Map<ModuleDescription, Boolean> moduleStatuses, Stack<ModuleDescription> dependStack, ModuleDescription module) {
+        if (moduleStatuses.containsKey(module)) {
+            return moduleStatuses.get(module);
+        }
+
+        try {
+            URLClassLoader loader = new ModuleClassLoader(new URL[]{
+                    plugin.getDescription().getFile().toURI().toURL()
+            });
+
+            Class<?> main = loader.loadClass(module.getMain());
+            Module clazz = (Module) main.getDeclaredConstructor().newInstance();
+
+            clazz.init(plugin, module);
+            modules.put(module.getName(), clazz);
+            clazz.onLoad();
+
+            plugin.getPluginLogger().info(String.format("Loaded module %s version %s by %s", module.getName(), module.getVersion(), module.getAuthor()));
+        } catch (Throwable t) {
+            plugin.getPluginLogger().warn("Error enabling module " + module.getName(), t);
+        }
+
+        moduleStatuses.put(module, true);
+        return true;
     }
 
     private boolean enableModule(Map<ModuleDescription, Boolean> moduleStatuses, Stack<ModuleDescription> dependStack, ModuleDescription module) {
@@ -105,8 +146,8 @@ public class ModuleManager {
         if (status) {
             try {
                 URLClassLoader loader = new ModuleClassLoader(new URL[]{
-                                module.getFile().toURI().toURL()
-                        });
+                        module.getFile().toURI().toURL()
+                });
                 Class<?> main = loader.loadClass(module.getMain());
                 Module clazz = (Module) main.getDeclaredConstructor().newInstance();
 

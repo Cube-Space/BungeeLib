@@ -55,27 +55,29 @@ public class Database {
         //Register the DAO
         synchronized (daos) {
             daos.put(entityClass, dao);
-        }
 
-        //Check if this DAO needs to make a Table
-        plugin.getPluginLogger().debug("Checking for Table " + entityClass.getName());
-        try {
-            TableUtils.createTableIfNotExists(connectionSource, entityClass);
-        } catch (SQLException e) {
-            plugin.getPluginLogger().warn("Could not create Table for " + entityClass.getName());
+            //Check if this DAO needs to make a Table
+            plugin.getPluginLogger().debug("Checking for Table " + entityClass.getName());
+            try {
+                TableUtils.createTableIfNotExists(connectionSource, entityClass);
+            } catch (SQLException e) {
+                plugin.getPluginLogger().warn("Could not create Table for " + entityClass.getName());
+            }
         }
     }
 
     /**
-     * Get the correct DAO for the EntityClass. If no DAO was registered it returns null/
+     * Get the correct DAO for the EntityClass. If no DAO was registered it returns null
      *
      * @param entityClass
      * @return
      */
     public Dao getDAO(Class<?> entityClass) {
-        plugin.getPluginLogger().debug("Getting DAO for " + entityClass.getName());
+        synchronized (daos) {
+            plugin.getPluginLogger().debug("Getting DAO for " + entityClass.getName());
 
-        return daos.get(entityClass);
+            return daos.get(entityClass);
+        }
     }
 
     /**
