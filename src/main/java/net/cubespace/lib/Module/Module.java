@@ -9,10 +9,12 @@ import net.cubespace.lib.Logger.ModuleLogger;
 public abstract class Module {
     protected CubespacePlugin plugin;
     private ModuleLogger moduleLogger;
+    private ModuleDescription moduleDescription;
 
-    public Module(CubespacePlugin plugin) {
+    public Module(CubespacePlugin plugin, ModuleDescription moduleDescription) {
         this.plugin = plugin;
         this.moduleLogger = new ModuleLogger(plugin, this);
+        this.moduleDescription = moduleDescription;
     }
 
     /**
@@ -46,5 +48,14 @@ public abstract class Module {
      */
     public ModuleLogger getModuleLogger() {
         return moduleLogger;
+    }
+
+    /**
+     * Return the Module description
+     *
+     * @return
+     */
+    public ModuleDescription getModuleDescription() {
+        return moduleDescription;
     }
 }
