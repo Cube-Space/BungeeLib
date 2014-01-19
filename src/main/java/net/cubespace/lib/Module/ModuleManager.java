@@ -108,8 +108,9 @@ public class ModuleManager {
                                 module.getFile().toURI().toURL()
                         });
                 Class<?> main = loader.loadClass(module.getMain());
-                Module clazz = (Module) main.getDeclaredConstructor(CubespacePlugin.class, ModuleDescription.class).newInstance();
+                Module clazz = (Module) main.getDeclaredConstructor().newInstance();
 
+                clazz.init(plugin, module);
                 modules.put(module.getName(), clazz);
                 clazz.onLoad();
                 plugin.getPluginLogger().info(String.format("Loaded module %s version %s by %s", module.getName(), module.getVersion(), module.getAuthor()));

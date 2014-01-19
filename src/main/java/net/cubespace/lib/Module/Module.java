@@ -11,7 +11,7 @@ public abstract class Module {
     private ModuleLogger moduleLogger;
     private ModuleDescription moduleDescription;
 
-    public Module(CubespacePlugin plugin, ModuleDescription moduleDescription) {
+    public void init(CubespacePlugin plugin, ModuleDescription moduleDescription) {
         this.plugin = plugin;
         this.moduleLogger = new ModuleLogger(plugin, this);
         this.moduleDescription = moduleDescription;
