@@ -3,6 +3,7 @@ package net.cubespace.lib;
 import net.cubespace.lib.Command.BindManager;
 import net.cubespace.lib.Command.CommandExecutor;
 import net.cubespace.lib.Configuration.ConfigManager;
+import net.cubespace.lib.Database.Database;
 import net.cubespace.lib.EventBus.AsyncEventBus;
 import net.cubespace.lib.Logger.Logger;
 import net.cubespace.lib.Manager.ManagerRegistry;
@@ -27,6 +28,7 @@ public class CubespacePlugin extends Plugin {
     private CommandExecutor commandExecutor;
     private ManagerRegistry managerRegistry;
     private ModuleManager moduleManager;
+    protected Database database;
     private HashMap<String, PluginMessageManager> pluginMessageManagerHashMap = new HashMap<>();
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -160,5 +162,14 @@ public class CubespacePlugin extends Plugin {
      */
     public SimpleDateFormat getSimpleDateFormat() {
         return simpleDateFormat;
+    }
+
+    /**
+     * Returns the Plugins database (can be null if none is initiated)
+     *
+     * @return
+     */
+    public Database getDatabase() {
+        return database;
     }
 }
