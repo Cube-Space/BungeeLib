@@ -1,6 +1,7 @@
 package net.cubespace.lib.Configuration;
 
-import net.craftminecraft.bungee.bungeeyaml.bukkitapi.InvalidConfigurationException;
+import net.cubespace.Yamler.Config.Config;
+import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.cubespace.lib.CubespacePlugin;
 
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class ConfigManager {
         plugin.getPluginLogger().debug("Trying to load new Config '" + name + "'");
 
         try {
-            config.init(this.plugin);
+            config.init();
             configHashMap.put(name, config);
         } catch (InvalidConfigurationException e) {
             plugin.getPluginLogger().error("Could not init Config", e);

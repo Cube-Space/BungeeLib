@@ -6,7 +6,7 @@
 
     <groupId>net.cubespace</groupId>
     <artifactId>BungeeLib</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.3-SNAPSHOT</version>
 
     <distributionManagement>
         <snapshotRepository>
@@ -136,29 +136,24 @@
 
     <repositories>
         <repository>
-            <id>craftminecraft-dev</id>
-            <url>http://repo.craftminecraft.net/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>prov-libs</id>
-            <url>http://nexus.cube-space.net/content/repositories/prov-libs/</url>
-        </repository>
-        <repository>
-            <id>sonatype-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>cubespace</id>
+            <url>http://nexus.cube-space.net/content/groups/public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.7-SNAPSHOT</version>
+            <artifactId>bungeecord-parent</artifactId>
+            <version>1.7.2</version>
         </dependency>
         <dependency>
-            <groupId>net.craftminecraft.bungee</groupId>
-            <artifactId>bungeeyaml</artifactId>
-            <version>1.2</version>
+            <groupId>net.cubespace</groupId>
+            <artifactId>Yamler</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.iKeirNez</groupId>
