@@ -113,6 +113,7 @@
                                     <include>com.iKeirNez:*</include>
                                     <include>org.jdeferred:*</include>
                                     <include>org.xerial:*</include>
+                                    <include>org.slf4j:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
