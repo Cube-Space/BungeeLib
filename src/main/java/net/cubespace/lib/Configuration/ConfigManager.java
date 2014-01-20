@@ -3,6 +3,7 @@ package net.cubespace.lib.Configuration;
 import net.cubespace.Yamler.Config.Config;
 import net.cubespace.Yamler.Config.InvalidConfigurationException;
 import net.cubespace.lib.CubespacePlugin;
+import net.cubespace.lib.Module.Module;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
  */
 public class ConfigManager {
     private HashMap<String, Config> configHashMap = new HashMap<>();
+    private HashMap<Module, ModuleConfigManager> moduleConfigManagers = new HashMap<>();
     private CubespacePlugin plugin;
 
     /**
@@ -73,5 +75,18 @@ public class ConfigManager {
                 throw new RuntimeException(e);
             }
         }
+
+        for(ModuleConfigManager moduleConfigManager : moduleConfigManagers.values()) {
+            moduleConfigManager.reload();
+        }
+    }
+
+    /**
+     * Register a new Config Manager for a Module so it gets reloaded when the ConfigManager does
+     * @param module
+     * @param moduleConfigManager
+     */
+    public void registerNewModuleConfigManager(Module module, ModuleConfigManager moduleConfigManager) {
+        moduleConfigManagers.put(module, moduleConfigManager);
     }
 }

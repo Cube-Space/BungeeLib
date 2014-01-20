@@ -1,5 +1,6 @@
 package net.cubespace.lib.Module;
 
+import net.cubespace.lib.Configuration.ModuleConfigManager;
 import net.cubespace.lib.CubespacePlugin;
 import net.cubespace.lib.Logger.ModuleLogger;
 
@@ -10,11 +11,13 @@ public abstract class Module {
     protected CubespacePlugin plugin;
     private ModuleLogger moduleLogger;
     private ModuleDescription moduleDescription;
+    private ModuleConfigManager moduleConfigManager;
 
     public void init(CubespacePlugin plugin, ModuleDescription moduleDescription) {
         this.plugin = plugin;
         this.moduleLogger = new ModuleLogger(plugin, this);
         this.moduleDescription = moduleDescription;
+        this.moduleConfigManager = new ModuleConfigManager(plugin, this);
     }
 
     /**
@@ -57,5 +60,9 @@ public abstract class Module {
      */
     public ModuleDescription getModuleDescription() {
         return moduleDescription;
+    }
+
+    public ModuleConfigManager getConfigManager() {
+        return moduleConfigManager;
     }
 }

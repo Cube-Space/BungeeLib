@@ -23,6 +23,8 @@ public class PluginMessageListener implements PacketListener {
 
     @PacketHandler
     public void onPermissionResponse(PermissionResponse permissionResponse) {
+        if(permissionManager.get(permissionResponse.getSender().getName()) == null) return;
+
         if(permissionResponse.getMode() == 0) {
             //Clear permissions
             permissionManager.get(permissionResponse.getSender().getName()).clear();
