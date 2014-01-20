@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 public class ComponentBuilderBuilder implements IMessageBuilder {
     private String message;
     private TreeMap<String, IClickEvent> clickEventHashMap = new TreeMap<>();
+    private HashMap<String, String> variables = new HashMap<>();
     private static final Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
 
     private BaseComponent[] fromLegacyText(String message) {
@@ -71,6 +73,46 @@ public class ComponentBuilderBuilder implements IMessageBuilder {
                 }
 
                 continue;
+            }
+
+            //We found a %
+            if ((byte)c == 25) {
+                i++;
+
+                StringBuilder sb = new StringBuilder();
+                while(i < message.length()) {
+                    c = message.charAt(i);
+                    i++;
+                    if(c == '\u0025') {
+                        break;
+                    } else {
+                        sb.append(c);
+                    }
+                }
+                i--;
+
+                String identifier = sb.toString();
+                if(!variables.containsKey(identifier)) {
+                    builder.append("%");
+                    builder.append(identifier);
+                    builder.append("%");
+
+                    continue;
+                }
+
+                if (builder.length() > 0) {
+                    TextComponent old = component;
+                    component = new TextComponent(old);
+                    old.setText(builder.toString());
+                    builder = new StringBuilder();
+                    components.add(old);
+                }
+
+                TextComponent old = component;
+                component = new TextComponent(old);
+                component.setText(variables.get(identifier));
+                components.add(component);
+                component = old;
             }
 
             //We found a {
@@ -210,5 +252,12 @@ public class ComponentBuilderBuilder implements IMessageBuilder {
     @Override
     public void send(CommandSender sender) {
         sender.sendMessage(fromLegacyText(message));
+    }
+
+    @Override
+    public IMessageBuilder setVariable(String variable, String value) {
+        variables.put(variable, value);
+
+        return this;
     }
 }

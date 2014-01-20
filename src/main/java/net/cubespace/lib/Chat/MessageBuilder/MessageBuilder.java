@@ -46,4 +46,11 @@ public class MessageBuilder implements IMessageBuilder {
     public void send(CommandSender sender) {
         messageBuilder.send(sender);
     }
+
+    @Override
+    public IMessageBuilder setVariable(String variable, String value) {
+        messageBuilder.setVariable(variable, value);
+
+        return this;
+    }
 }

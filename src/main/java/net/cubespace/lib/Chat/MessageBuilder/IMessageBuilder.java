@@ -11,4 +11,5 @@ public interface IMessageBuilder {
     public IMessageBuilder setText(String text);
     public IMessageBuilder addEvent(String ident, IClickEvent event);
     public void send(CommandSender sender);
+    public IMessageBuilder setVariable(String variable, String value);
 }
