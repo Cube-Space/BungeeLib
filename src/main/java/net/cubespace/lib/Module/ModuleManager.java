@@ -82,11 +82,7 @@ public class ModuleManager {
         }
 
         try {
-            URLClassLoader loader = new ModuleClassLoader(new URL[]{
-                    plugin.getDescription().getFile().toURI().toURL()
-            });
-
-            Class<?> main = loader.loadClass(module.getMain());
+            Class<?> main = plugin.getClass().getClassLoader().loadClass(module.getMain());
             Module clazz = (Module) main.getDeclaredConstructor().newInstance();
 
             clazz.init(plugin, module);
