@@ -46,6 +46,16 @@ public class ModuleManager {
         manualInjection.add(description);
     }
 
+    public void disableModules() {
+        for(Module module : modules.values()) {
+            try {
+                module.onDisable();
+            } catch (Exception e) {
+                plugin.getPluginLogger().warn("Failed to disable " + module.getModuleDescription().getName());
+            }
+        }
+    }
+
     public void loadAndEnableModules() {
         Map<ModuleDescription, Boolean> moduleStatuses = new HashMap<>();
         for (ModuleDescription entry : manualInjection) {
