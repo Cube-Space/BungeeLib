@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import net.cubespace.lib.CubespacePlugin;
 import net.cubespace.lib.Module.ModuleSource.JenkinsModuleSource;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 
 import java.io.File;
 import java.io.InputStream;
@@ -23,7 +24,7 @@ import java.util.jar.JarFile;
 public class ModuleManager {
     private CubespacePlugin plugin;
     private Map<String, Module> modules = new HashMap<>();
-    private final Yaml yaml = new Yaml();
+    private final Yaml yaml = new Yaml(new CustomClassLoaderConstructor(CubespacePlugin.class.getClassLoader()));
     private Map<String, ModuleDescription> toLoad = new HashMap<>();
     private List<ModuleDescription> manualInjection = new ArrayList<>();
     private String moduleSpace;
