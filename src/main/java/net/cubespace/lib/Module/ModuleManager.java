@@ -46,6 +46,12 @@ public class ModuleManager {
         return null;
     }
 
+    public <T extends Module> T getModule(String name) {
+        Preconditions.checkNotNull(name, "Name to lookup can not be null");
+
+        return (T) modules.get(name);
+    }
+
     public void registerModule(ModuleDescription description) {
         manualInjection.add(description);
     }
