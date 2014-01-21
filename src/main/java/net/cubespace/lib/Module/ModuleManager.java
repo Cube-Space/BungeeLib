@@ -2,6 +2,7 @@ package net.cubespace.lib.Module;
 
 import com.google.common.base.Preconditions;
 import net.cubespace.lib.CubespacePlugin;
+import net.cubespace.lib.Module.ModuleSource.JenkinsModuleSource;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -25,6 +26,7 @@ public class ModuleManager {
     private final Yaml yaml = new Yaml();
     private Map<String, ModuleDescription> toLoad = new HashMap<>();
     private List<ModuleDescription> manualInjection = new ArrayList<>();
+    private String moduleSpace;
 
     public ModuleManager(CubespacePlugin plugin) {
         this.plugin = plugin;
@@ -191,4 +193,29 @@ public class ModuleManager {
             }
         }
     }
+
+    public boolean downloadModule(String moduleName) {
+        JenkinsModuleSource jenkinsModuleSource = new JenkinsModuleSource(this);
+
+        ModuleDescription moduleDescription = jenkinsModuleSource.getUpstreamVersion(moduleName);
+        if(moduleDescription == null) {
+            this.getPlugin().getPluginLogger().warn("Module lookup returned null");
+            return false;
+        }
+
+        return jenkinsModuleSource.retrieve(moduleDescription);
+    }
+
+    public String getModuleSpace() {
+        return moduleSpace;
+    }
+
+    public void setModuleSpace(String moduleSpace) {
+        this.moduleSpace = moduleSpace;
+    }
+
+    public CubespacePlugin getPlugin() {
+        return plugin;
+    }
+
 }

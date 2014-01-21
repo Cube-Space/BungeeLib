@@ -7,6 +7,6 @@ import net.cubespace.lib.Module.ModuleDescription;
  */
 public interface ModuleSource {
     public boolean checkVersion(ModuleDescription moduleDescription);
-    public ModuleDescription getUpstreamVersion(ModuleDescription moduleDescription);
-
+    public ModuleDescription getUpstreamVersion(String moduleName);
+    public boolean retrieve(ModuleDescription moduleDescription);
 }

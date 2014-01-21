@@ -6,7 +6,7 @@
 
     <groupId>net.cubespace</groupId>
     <artifactId>BungeeLib</artifactId>
-    <version>1.10.0-SNAPSHOT</version>
+    <version>1.11.0-SNAPSHOT</version>
 
     <distributionManagement>
         <snapshotRepository>
@@ -114,6 +114,8 @@
                                     <include>org.jdeferred:*</include>
                                     <include>com.h2database:*</include>
                                     <include>org.slf4j:*</include>
+                                    <include>org.apache.maven:*</include>
+                                    <include>org.codehaus.plexus:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
@@ -173,6 +175,16 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.3.174</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.0.16</version>
         </dependency>
     </dependencies>
 </project>
