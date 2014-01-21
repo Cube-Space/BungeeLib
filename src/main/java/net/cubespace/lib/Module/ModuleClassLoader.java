@@ -25,6 +25,10 @@ public class ModuleClassLoader extends URLClassLoader {
         allLoaders.add(this);
     }
 
+    public static void removeLoader(ModuleClassLoader moduleClassLoader) {
+        allLoaders.remove(moduleClassLoader);
+    }
+
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         return loadClass0(name, resolve, true);

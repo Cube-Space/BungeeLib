@@ -27,6 +27,7 @@ public class ModuleManager {
     private final Yaml yaml = new Yaml(new CustomClassLoaderConstructor(CubespacePlugin.class.getClassLoader()));
     private Map<String, ModuleDescription> toLoad = new HashMap<>();
     private List<ModuleDescription> manualInjection = new ArrayList<>();
+    private Map<ModuleDescription, Boolean> moduleStatuses = new HashMap<>();
     private String moduleSpace;
 
     public ModuleManager(CubespacePlugin plugin) {
@@ -51,16 +52,42 @@ public class ModuleManager {
 
     public void disableModules() {
         for(Module module : modules.values()) {
-            try {
-                module.onDisable();
-            } catch (Exception e) {
-                plugin.getPluginLogger().warn("Failed to disable " + module.getModuleDescription().getName());
-            }
+            disableModule(module);
         }
     }
 
+    public boolean enableModule(ModuleDescription moduleDescription) {
+        enableModule(moduleStatuses, new Stack<ModuleDescription>(), moduleDescription);
+
+        if(modules.containsKey(moduleDescription.getName())) {
+            modules.get(moduleDescription.getName()).onEnable();
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean disableModule(Module module) {
+        boolean success = true;
+
+        try {
+            module.onDisable();
+        } catch (Exception e) {
+            plugin.getPluginLogger().warn("Failed to disable " + module.getModuleDescription().getName());
+            success = false;
+        }
+
+        ModuleClassLoader moduleClassLoader = (ModuleClassLoader) module.getClass().getClassLoader();
+        ModuleClassLoader.removeLoader(moduleClassLoader);
+
+        modules.remove(module.getModuleDescription().getName());
+        moduleStatuses.remove(module.getModuleDescription());
+
+        return success;
+    }
+
     public void loadAndEnableModules() {
-        Map<ModuleDescription, Boolean> moduleStatuses = new HashMap<>();
         for (ModuleDescription entry : manualInjection) {
             if (!enableModuleManual(moduleStatuses, new Stack<ModuleDescription>(), entry)) {
                 plugin.getPluginLogger().warn("Failed to enable " + entry.getName());
@@ -84,7 +111,7 @@ public class ModuleManager {
                 module.onEnable();
                 plugin.getPluginLogger().info(String.format("Enabled module %s version %s by %s", module.getModuleDescription().getName(), module.getModuleDescription().getVersion(), module.getModuleDescription().getAuthor()));
             } catch (Throwable t) {
-                plugin.getPluginLogger().warn("Exception encountered when loading plugin: " + module.getModuleDescription().getName(), t);
+                plugin.getPluginLogger().warn("Exception encountered when loading module: " + module.getModuleDescription().getName(), t);
             }
         }
     }
