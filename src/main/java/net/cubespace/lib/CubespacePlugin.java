@@ -4,6 +4,7 @@ import net.cubespace.lib.Command.BindManager;
 import net.cubespace.lib.Command.CommandExecutor;
 import net.cubespace.lib.Configuration.ConfigManager;
 import net.cubespace.lib.Database.Database;
+import net.cubespace.lib.Deferred.DeferredManager;
 import net.cubespace.lib.EventBus.AsyncEventBus;
 import net.cubespace.lib.Logger.Logger;
 import net.cubespace.lib.Manager.ManagerRegistry;
@@ -28,6 +29,7 @@ public class CubespacePlugin extends Plugin {
     private CommandExecutor commandExecutor;
     private ManagerRegistry managerRegistry;
     private ModuleManager moduleManager;
+    private DeferredManager deferredManager;
     protected Database database;
     private HashMap<String, PluginMessageManager> pluginMessageManagerHashMap = new HashMap<>();
 
@@ -153,6 +155,14 @@ public class CubespacePlugin extends Plugin {
         }
 
         return moduleManager;
+    }
+
+    public DeferredManager getDeferredManager() {
+        if(deferredManager == null) {
+            deferredManager = new DeferredManager(this);
+        }
+
+        return deferredManager;
     }
 
     /**
