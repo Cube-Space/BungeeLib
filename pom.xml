@@ -105,7 +105,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>${project.artifactId}</finalName>
+                            <finalName>Cubespace-${project.artifactId}</finalName>
                             <artifactSet>
                                 <includes>
                                     <include>com.j256.ormlite:*</include>
