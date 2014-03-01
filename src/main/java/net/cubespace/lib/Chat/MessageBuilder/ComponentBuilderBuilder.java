@@ -21,7 +21,7 @@ public class ComponentBuilderBuilder implements IMessageBuilder {
     private String message;
     private TreeMap<String, IClickEvent> clickEventHashMap = new TreeMap<>();
     private HashMap<String, String> variables = new HashMap<>();
-    private static final Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/\\S*)?$");
+    private static final Pattern url = Pattern.compile("^(?:(https?)://)?([-\\w_\\.]{2,}\\.[a-z]{2,4})(/[^§\\s]*)?$");
 
     private BaseComponent[] fromLegacyText(String message) {
         ArrayList<BaseComponent> components = new ArrayList<>();

@@ -6,7 +6,7 @@
 
     <groupId>net.cubespace</groupId>
     <artifactId>BungeeLib</artifactId>
-    <version>1.14.1-SNAPSHOT</version>
+    <version>1.5.4-SNAPSHOT</version>
 
     <distributionManagement>
         <snapshotRepository>
@@ -112,7 +112,7 @@
                                     <include>javax.persistence:*</include>
                                     <include>com.iKeirNez:*</include>
                                     <include>org.jdeferred:*</include>
-                                    <include>com.h2database:*</include>
+
                                     <include>org.slf4j:*</include>
                                     <include>org.apache.maven:*</include>
                                     <include>org.codehaus.plexus:*</include>
