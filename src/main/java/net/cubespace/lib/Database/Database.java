@@ -16,7 +16,7 @@ public class Database {
     private final HashMap<Class<?>, Dao> daos = new HashMap<>();
 
     /**
-     * Create a new AsyncDatabaseLogger Connection
+     * Create a new Database Connection
      *
      * @param plugin Plugin for which this Connection is
      * @param url The URL to connect to

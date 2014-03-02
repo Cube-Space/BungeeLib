@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 07.01.14 21:12
  */
 public class PermissionStorage {
     private ArrayList<String> permissions = new ArrayList<>();

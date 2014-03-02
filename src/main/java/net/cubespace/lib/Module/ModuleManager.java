@@ -20,6 +20,9 @@ import java.util.jar.JarFile;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
+ *
+ * A module must have a valid module.yml in the root of the Jar to be loaded. What the module.yml must contain can be
+ * looked up here: {@link net.cubespace.lib.Module.ModuleDescription}
  */
 public class ModuleManager {
     private CubespacePlugin plugin;
@@ -29,11 +32,19 @@ public class ModuleManager {
     private List<ModuleDescription> manualInjection = new ArrayList<>();
     private Map<ModuleDescription, Boolean> moduleStatuses = new HashMap<>();
     private String moduleSpace;
+    private String overwritePomUrl = null;
+    private String overwriteModuleUrl = null;
 
     public ModuleManager(CubespacePlugin plugin) {
         this.plugin = plugin;
     }
 
+    /**
+     * Get a Module by its main class
+     *
+     * @param clazz The class which should be searched for
+     * @return The loaded module or null
+     */
     public <T extends Module> T getModule(Class<T> clazz) {
         Preconditions.checkNotNull(clazz, "Class to lookup can not be null");
 
@@ -46,34 +57,42 @@ public class ModuleManager {
         return null;
     }
 
+    /**
+     * Get a Module by its name
+     *
+     * @param name The name of the Module
+     * @return The loaded module or null
+     */
     public <T extends Module> T getModule(String name) {
         Preconditions.checkNotNull(name, "Name to lookup can not be null");
 
         return (T) modules.get(name);
     }
 
+    /**
+     * Manual inject a Module. This should be used if you have bundled Modules inside the Plugin itself.
+     *
+     * @param description A dummy Description which has to be build.
+     */
     public void registerModule(ModuleDescription description) {
         manualInjection.add(description);
     }
 
+    /**
+     * Disable all Modules
+     */
     public void disableModules() {
         for(Module module : modules.values()) {
             disableModule(module);
         }
     }
 
-    public boolean enableModule(ModuleDescription moduleDescription) {
-        enableModule(moduleStatuses, new Stack<ModuleDescription>(), moduleDescription);
-
-        if(modules.containsKey(moduleDescription.getName())) {
-            modules.get(moduleDescription.getName()).onEnable();
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    /**
+     * Disable a specific Module
+     *
+     * @param module The module which should be disabled
+     * @return True on success, false if not
+     */
     public boolean disableModule(Module module) {
         boolean success = true;
 
@@ -93,6 +112,9 @@ public class ModuleManager {
         return success;
     }
 
+    /**
+     * Load and enable all found and registered Modules
+     */
     public void loadAndEnableModules() {
         for (ModuleDescription entry : manualInjection) {
             if (!enableModuleManual(moduleStatuses, new Stack<ModuleDescription>(), entry)) {
@@ -206,6 +228,10 @@ public class ModuleManager {
         return status;
     }
 
+    /**
+     * Detect all Modules in the given Folder
+     * @param folder The folder from which the modules should be loaded from
+     */
     public void detectModules(File folder) {
         Preconditions.checkNotNull(folder, "folder");
         Preconditions.checkArgument(folder.isDirectory(), "Must load from a directory");
@@ -228,8 +254,22 @@ public class ModuleManager {
         }
     }
 
+    /**
+     * Download a new Module from the Upstream.
+     *
+     * @param moduleName The module which should be downloaded
+     * @return True on success, false on error
+     */
     public boolean downloadModule(String moduleName) {
         JenkinsModuleSource jenkinsModuleSource = new JenkinsModuleSource(this);
+
+        if (overwritePomUrl != null) {
+            jenkinsModuleSource.pomUrl = overwritePomUrl;
+        }
+
+        if (overwriteModuleUrl != null) {
+            jenkinsModuleSource.moduleUrl = overwriteModuleUrl;
+        }
 
         ModuleDescription moduleDescription = jenkinsModuleSource.getUpstreamVersion(moduleName);
         if(moduleDescription == null) {
@@ -240,16 +280,52 @@ public class ModuleManager {
         return jenkinsModuleSource.retrieve(moduleDescription);
     }
 
+    /**
+     * Get the module Space inside the Upstream
+     * @return
+     */
     public String getModuleSpace() {
         return moduleSpace;
     }
 
+    /**
+     * Set the moduleSpace for the Upstream
+     * @param moduleSpace
+     */
     public void setModuleSpace(String moduleSpace) {
         this.moduleSpace = moduleSpace;
+    }
+
+    /**
+     * Set a new URL for fetching the Upstreams POM.
+     * The default Value is: http://jenkins.cube-space.net/job/%moduleSpace%/net.cubespace$%moduleName%/ws/pom.xml
+     *
+     * Format:
+     *  %moduleSpace% => The set moduleSpace in the ModuleManager
+     *  %moduleName% => The name of the Module which should be looked up
+     *
+     * @param overwritePomUrl The new URL which should be used, null to reset to default
+     */
+    public void setOverwritePomUrl(String overwritePomUrl) {
+        this.overwritePomUrl = overwritePomUrl;
+    }
+
+    /**
+     * Set a new URL for fetching the Upstream Module JAR.
+     * The default Value is: http://jenkins.cube-space.net/job/%moduleSpace%/net.cubespace$%moduleName%/lastSuccessfulBuild/artifact/net.cubespace/%moduleName%/%moduleVersion%/%moduleName%-%moduleVersion%.jar
+     *
+     * Format:
+     *  %moduleSpace% => The set moduleSpace in the ModuleManager
+     *  %moduleName% => The name of the Module which should be looked up
+     *  %moduleVersion% => The version of the Module which should be downloaded
+     *
+     * @param overwriteModuleUrl The new URL which should be used, null to reset to default
+     */
+    public void setOverwriteModuleUrl(String overwriteModuleUrl) {
+        this.overwriteModuleUrl = overwriteModuleUrl;
     }
 
     public CubespacePlugin getPlugin() {
         return plugin;
     }
-
 }

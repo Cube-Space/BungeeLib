@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 13.11.13 20:54
  */
 public class CommandStruct {
     private Command annotation;

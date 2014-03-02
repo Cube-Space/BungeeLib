@@ -9,29 +9,28 @@ import net.cubespace.lib.Permission.Listener.PluginMessageListener;
 import net.md_5.bungee.api.CommandSender;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 07.01.14 21:05
  */
 public class PermissionManager {
-    private HashMap<String, PermissionStorage> permissionStorageHashMap = new HashMap<>();
-    private String prefix;
-    private CubespacePlugin plugin;
+    private static HashMap<String, PermissionStorage> permissionStorageHashMap = new HashMap<>();
+    private static HashSet<String> prefixes = new HashSet<>();
 
     public PermissionManager(CubespacePlugin plugin) {
-        this.plugin = plugin;
-
         plugin.getPluginMessageManager("CubespaceLibrary").addPacketToRegister(null, PermissionRequest.class);
         plugin.getPluginMessageManager("CubespaceLibrary").addPacketToRegister(null, PermissionResponse.class);
         plugin.getPluginMessageManager("CubespaceLibrary").addListenerToRegister(null, new PluginMessageListener(this, plugin));
 
         plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerJoinListener(plugin, this));
-        plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerQuitListener(plugin, this));
+        plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerQuitListener(this));
     }
 
     public void setup(String prefix) {
-        this.prefix = prefix;
+        if (!prefixes.contains(prefix)) {
+            prefixes.add(prefix);
+        }
     }
 
     public void create(String player) {
@@ -46,7 +45,6 @@ public class PermissionManager {
         boolean useStorage = permissionStorageHashMap.containsKey(sender.getName());
 
         StringBuilder sb = new StringBuilder();
-        sb.append(prefix);
         for(int i = 0; i < permission.length(); i++) {
             String check = sb.toString() + "*";
 
@@ -62,7 +60,7 @@ public class PermissionManager {
         permissionStorageHashMap.remove(player);
     }
 
-    public String getPrefix() {
-        return prefix;
+    public HashSet<String> getPrefixes() {
+        return prefixes;
     }
 }

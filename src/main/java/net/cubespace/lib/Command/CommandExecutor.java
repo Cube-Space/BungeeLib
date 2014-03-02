@@ -1,8 +1,8 @@
 package net.cubespace.lib.Command;
 
-import net.cubespace.lib.Util.StringUtils;
 import net.cubespace.lib.CubespacePlugin;
 import net.cubespace.lib.Module.Module;
+import net.cubespace.lib.Util.StringUtils;
 import net.md_5.bungee.api.CommandSender;
 
 import java.lang.annotation.Annotation;
@@ -12,7 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The type Command executor.
+ * @author geNAZt (fabian.fassbender42@googlemail.com)
+ *
+ * The CommandExecutor holds all Commands which can be executed. You can add/remove Commands during the Runtime without
+ * any Sideeffect.
  */
 public class CommandExecutor {
     private HashMap<String, CommandStruct> commandMap = new HashMap<String, CommandStruct>();
@@ -23,9 +26,10 @@ public class CommandExecutor {
     }
 
     /**
-     * Add a new CLICommand into the executor
+     * Adds a new CLICommand for the given Module
      *
-     * @param cliCommand the cli command
+     * @param module The module for which this Command should be added
+     * @param cliCommand The command class which contains @Command annotations
      */
     public void add(Module module, CLICommand cliCommand) {
         plugin.getPluginLogger().info("Registered new Command " + cliCommand.toString());
@@ -57,6 +61,12 @@ public class CommandExecutor {
         }
     }
 
+    /**
+     * When you unload a Module be sure to remove all Commands loaded by it. Otherwise it can happen that the CommandExecutor
+     * tries to call Commands from unloaded Modules
+     *
+     * @param module The module which has been unloaded
+     */
     public void remove(Module module) {
         for(Map.Entry<String, CommandStruct> commands : new HashMap<>(commandMap).entrySet()) {
             if(commands.getValue().getModule().equals(module)) {
@@ -65,6 +75,17 @@ public class CommandExecutor {
         }
     }
 
+    /**
+     * Executes a Command. It searches for a given Command in reverse order of the Arguments. For example if a Player executes
+     * "money pay Skycrapper 150" the CommandExecutor first searches for a Command "money pay Skycrapper 150", then for "money
+     * pay Skycrapper" with argument "150", then "money pay" with arguments "Skycrapper", "150" and then for "money" with the three
+     * Arguments.
+     *
+     * @param commandSender The CommandSender which executed this Command
+     * @param command The command name which has been executed
+     * @param args All arguments which has been given
+     * @return True when the Command has been executed, false if there was an Error
+     */
     public boolean onCommand(CommandSender commandSender, String command, String[] args) {
         plugin.getPluginLogger().info(commandSender.getName() + " emitted command: " + command + " with args " + StringUtils.join(args, " "));
 
@@ -83,18 +104,17 @@ public class CommandExecutor {
                 if(realArgs.length < command1.getAnnotation().arguments()) {
                     plugin.getPluginLogger().debug("Command has not enough Arguments to be handled");
                     onNotEnoughArguments(commandSender, command1);
-
-                    return true;
+                    return false;
                 }
 
                 try {
                     plugin.getPluginLogger().debug("Invoking command with arguments " + StringUtils.join(realArgs, " "));
                     command1.getCommand().invoke(command1.getInstance(), commandSender, realArgs);
+                    return true;
                 } catch (Exception e) {
                     plugin.getPluginLogger().error("Exception thrown while executing a Command", e);
+                    return false;
                 }
-
-                return true;
             }
         }
 
@@ -107,13 +127,13 @@ public class CommandExecutor {
                 return true;
             } catch (Exception e) {
                 plugin.getPluginLogger().error("Exception thrown while executing a Command", e);
+                return false;
             }
         }
 
         plugin.getPluginLogger().debug("Executed a unknown Command");
         onUnknownCommand(commandSender, command);
-
-        return true;
+        return false;
     }
 
     /**

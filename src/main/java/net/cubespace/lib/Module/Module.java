@@ -62,6 +62,11 @@ public abstract class Module {
         return moduleDescription;
     }
 
+    /**
+     * Get the Module specific Config Manager
+     *
+     * @return
+     */
     public ModuleConfigManager getConfigManager() {
         return moduleConfigManager;
     }

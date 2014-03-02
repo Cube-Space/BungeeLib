@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 26.12.13 18:06
  */
 public class HandlerInfo {
     private final Method method;

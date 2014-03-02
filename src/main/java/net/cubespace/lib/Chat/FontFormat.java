@@ -70,6 +70,12 @@ public enum FontFormat {
         translate.put("&r", characterValue + "r");
     }
 
+    /**
+     * Basicly the same as ChatColor.translateColor but i made this enum to have a constant behaviour on all Systems
+     *
+     * @param value The String which should be converted
+     * @return &color => §color converted String
+     */
     public static String translateString(String value) {
         if(value == null) return null;
 
@@ -80,6 +86,11 @@ public enum FontFormat {
         return value;
     }
 
+    /**
+     * Strip away all color codes (only the & ones)
+     * @param input Colored String
+     * @return Uncolored String
+     */
     public static String stripColor(String input) {
         if (input == null) {
             return null;

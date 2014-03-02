@@ -4,7 +4,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 06.01.14 01:40
  */
 public class BungeeClickEvent implements IClickEvent {
     private String value;

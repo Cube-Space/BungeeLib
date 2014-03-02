@@ -4,7 +4,8 @@ import net.cubespace.lib.EventBus.Event;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 07.01.14 21:17
+ *
+ * This event gets called when a Player changes its permissions.
  */
 public class PermissionChangedEvent implements Event {
     private String player;

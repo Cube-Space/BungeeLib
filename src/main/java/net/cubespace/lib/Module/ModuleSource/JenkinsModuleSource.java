@@ -17,8 +17,8 @@ import java.util.HashMap;
  * @author geNAZt (fabian.fassbender42@googlemail.com)
  */
 public class JenkinsModuleSource implements ModuleSource {
-    private static final String pomUrl = "http://jenkins.cube-space.net/job/%moduleSpace%/net.cubespace$%moduleName%/ws/pom.xml";
-    private static final String moduleUrl = "http://jenkins.cube-space.net/job/%moduleSpace%/net.cubespace$%moduleName%/lastSuccessfulBuild/artifact/net.cubespace/%moduleName%/%moduleVersion%/%moduleName%-%moduleVersion%.jar";
+    public String pomUrl = "http://jenkins.cube-space.net/job/%moduleSpace%/net.cubespace$%moduleName%/ws/pom.xml";
+    public String moduleUrl = "http://jenkins.cube-space.net/job/%moduleSpace%/net.cubespace$%moduleName%/lastSuccessfulBuild/artifact/net.cubespace/%moduleName%/%moduleVersion%/%moduleName%-%moduleVersion%.jar";
 
     private ModuleManager moduleManager;
     private static HashMap<String, ModuleDescription> upstreamModuleDescriptions = new HashMap<>();
@@ -46,6 +46,14 @@ public class JenkinsModuleSource implements ModuleSource {
         return upstreamVersion.compareTo(currentVersion) == 1;
     }
 
+    /**
+     * Get the newest Information about the Upstream Version. It reads out the Upstream pom.xml in the Root directory.
+     * Be sure that the pom has this Properties configured: artifactId, version, description. The artifactId gives the
+     * ModuleName
+     *
+     * @param moduleName The name of the Module which should be checked
+     * @return The ModuleDescription of the Upstream module.
+     */
     @Override
     public ModuleDescription getUpstreamVersion(String moduleName) {
         moduleManager.getPlugin().getPluginLogger().info("Asking the Upstream for its last Version for " + moduleName);
@@ -73,6 +81,12 @@ public class JenkinsModuleSource implements ModuleSource {
         return upstreamModuleDescriptions.get(moduleName);
     }
 
+    /**
+     * Download the given Module from the Upstream.
+     *
+     * @param moduleDescription The module which should be downloaded
+     * @return True when it got downloaded, false if not
+     */
     @Override
     public boolean retrieve(ModuleDescription moduleDescription) {
         moduleManager.getPlugin().getPluginLogger().info("Attempting to download " + moduleDescription.getName() + " v" + moduleDescription.getVersion() + " from Jenkins");

@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 26.12.13 00:07
  */
 public class AsyncEventBus {
     private class SortListener implements Comparator<HandlerInfo> {
@@ -94,6 +93,11 @@ public class AsyncEventBus {
         addedEvents++;
     }
 
+    /**
+     * Call a new Event on the EventBus. This event gets called async out of the EventBus Thread.
+     *
+     * @param event The event which should be handled
+     */
     public void callEvent(Event event) {
         //Emit an warning if the Queue has already over 3000 events (maybe the EventHandler is too slow)
         if(queue.size() > 3000) {
@@ -107,6 +111,13 @@ public class AsyncEventBus {
         queue.add(event);
     }
 
+    /**
+     * This Event gets called synced up in the Thread which calls this Method. This makes sure that you can wait
+     * on the Events output.
+     *
+     * @param event The event which should be handled
+     * @return The event which has been handled
+     */
     public Event callEventSync(Event event) {
         addOneAddedEvent();
         return handleEvent(event);
@@ -179,6 +190,25 @@ public class AsyncEventBus {
         return event;
     }
 
+    /**
+     * Add a new Listener for the Module given.
+     * A Listener class can look like this:
+     *   https://github.com/geNAZt/CloudChat/blob/master/src/main/java/net/cubespace/CloudChat/Module/ChatHandler/Listener/ChatMessageListener.java
+     *
+     * If a Listener has canVeto in the Annotation the return type must be boolean (true for cancel the event)
+     *
+     * Please care that the order of called Events is this:
+     *  HIGHEST
+     *  HIGH
+     *  NORMAL
+     *  LOW
+     *  LOWEST
+     *
+     * This is the reversed order of Bukkits Eventhandler !
+     *
+     * @param module The module for which this Listener registers
+     * @param subscriber The listener which should be added
+     */
     public void addListener(Module module, Object subscriber) {
         plugin.getPluginLogger().debug("Attempt to add a new Listener " + subscriber.getClass().getName());
 
@@ -256,6 +286,11 @@ public class AsyncEventBus {
         }
     }
 
+    /**
+     * Remove a Listener
+     *
+     * @param subscriber
+     */
     public void removeListener(Object subscriber) {
         List<HandlerInfo> killList = new ArrayList<>();
 
@@ -276,6 +311,11 @@ public class AsyncEventBus {
         }
     }
 
+    /**
+     * Remove all Listeners when a Module gets unloaded
+     *
+     * @param module
+     */
     public void removeListener(Module module) {
         List<HandlerInfo> killList = new ArrayList<>();
 

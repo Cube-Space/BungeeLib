@@ -9,6 +9,14 @@ import java.util.HashMap;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
+ *
+ * This Manager gets used to Bind specific Commands. You can build so called "Binder" which should call the CommandExecutor.
+ * And example Binder looks like this:
+ *   https://github.com/geNAZt/CloudChat/blob/master/src/main/java/net/cubespace/CloudChat/Command/Binder/Binder.java
+ *   https://github.com/geNAZt/CloudChat/blob/master/src/main/java/net/cubespace/CloudChat/Command/Binder/PlayerBinder.java
+ *
+ * Why do i do it that "complicated" way ? The CommandExecutor in this Lib can execute Subcommands. How this works is
+ * explained in the CommandExecutor.
  */
 public class BindManager {
     private CubespacePlugin plugin;

@@ -10,7 +10,6 @@ import net.cubespace.lib.Permission.PermissionManager;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 07.01.14 21:09
  */
 public class PluginMessageListener implements PacketListener {
     private CubespacePlugin plugin;

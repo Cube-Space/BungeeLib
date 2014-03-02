@@ -4,7 +4,8 @@ import net.cubespace.lib.EventBus.Event;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 07.01.14 21:17
+ *
+ * This event gets fired on the EventBus when a full set of Permissions has been received
  */
 public class PermissionLoadedEvent implements Event {
     private String player;

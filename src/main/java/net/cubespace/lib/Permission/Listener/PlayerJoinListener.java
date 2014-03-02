@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 26.11.13 23:38
  */
 public class PlayerJoinListener implements Listener {
     private final CubespacePlugin plugin;
@@ -33,7 +32,7 @@ public class PlayerJoinListener implements Listener {
         plugin.getProxy().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                plugin.getPluginMessageManager("CubespaceLibrary").sendPluginMessage(event.getPlayer(), new PermissionRequest(permissionManager.getPrefix()));
+                plugin.getPluginMessageManager("CubespaceLibrary").sendPluginMessage(event.getPlayer(), new PermissionRequest(permissionManager.getPrefixes()));
             }
         }, 50, TimeUnit.MILLISECONDS);
     }

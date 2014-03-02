@@ -2,7 +2,6 @@ package net.cubespace.lib.Util;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 29.11.13 13:26
  */
 public class StringUtils {
     public static String join(String[] strings, String delimiter) {

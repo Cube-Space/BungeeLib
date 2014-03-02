@@ -10,7 +10,6 @@ import java.util.Map;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 26.12.13 13:43
  */
 public class ConfigManager {
     private HashMap<String, Config> configHashMap = new HashMap<>();
@@ -82,7 +81,9 @@ public class ConfigManager {
     }
 
     /**
-     * Register a new Config Manager for a Module so it gets reloaded when the ConfigManager does
+     * Register a new Config Manager for a Module so it gets reloaded when the ConfigManager does.
+     * This should NEVER be called from a Developer. The library adds the ModuleConfigManagers itself.
+     *
      * @param module
      * @param moduleConfigManager
      */
