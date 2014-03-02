@@ -32,7 +32,7 @@ public class PlayerJoinListener implements Listener {
         plugin.getProxy().getScheduler().schedule(plugin, new Runnable() {
             @Override
             public void run() {
-                plugin.getPluginMessageManager("CubespaceLibrary").sendPluginMessage(event.getPlayer(), new PermissionRequest(permissionManager.getPrefixes()));
+                plugin.getPluginMessageManager("CubespaceLibrary").sendPluginMessage(event.getPlayer(), new PermissionRequest(permissionManager.getPrefix()));
             }
         }, 50, TimeUnit.MILLISECONDS);
     }

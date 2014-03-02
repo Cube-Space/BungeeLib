@@ -9,14 +9,13 @@ import net.cubespace.lib.Permission.Listener.PluginMessageListener;
 import net.md_5.bungee.api.CommandSender;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
  */
 public class PermissionManager {
     private static HashMap<String, PermissionStorage> permissionStorageHashMap = new HashMap<>();
-    private static HashSet<String> prefixes = new HashSet<>();
+    private String prefix;
 
     public PermissionManager(CubespacePlugin plugin) {
         plugin.getPluginMessageManager("CubespaceLibrary").addPacketToRegister(null, PermissionRequest.class);
@@ -28,9 +27,7 @@ public class PermissionManager {
     }
 
     public void setup(String prefix) {
-        if (!prefixes.contains(prefix)) {
-            prefixes.add(prefix);
-        }
+        this.prefix = prefix;
     }
 
     public void create(String player) {
@@ -60,7 +57,7 @@ public class PermissionManager {
         permissionStorageHashMap.remove(player);
     }
 
-    public HashSet<String> getPrefixes() {
-        return prefixes;
+    public String getPrefix() {
+        return prefix;
     }
 }
