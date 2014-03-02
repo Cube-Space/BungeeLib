@@ -14,7 +14,7 @@ import java.util.HashMap;
  * @author geNAZt (fabian.fassbender42@googlemail.com)
  */
 public class PermissionManager {
-    private static HashMap<String, PermissionStorage> permissionStorageHashMap = new HashMap<>();
+    private HashMap<String, PermissionStorage> permissionStorageHashMap = new HashMap<>();
     private String prefix;
 
     public PermissionManager(CubespacePlugin plugin) {
@@ -23,7 +23,7 @@ public class PermissionManager {
         plugin.getPluginMessageManager("CubespaceLibrary").addListenerToRegister(null, new PluginMessageListener(this, plugin));
 
         plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerJoinListener(plugin, this));
-        plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerQuitListener(this));
+        plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerQuitListener(plugin, this));
     }
 
     public void setup(String prefix) {
@@ -42,6 +42,7 @@ public class PermissionManager {
         boolean useStorage = permissionStorageHashMap.containsKey(sender.getName());
 
         StringBuilder sb = new StringBuilder();
+        sb.append(prefix);
         for(int i = 0; i < permission.length(); i++) {
             String check = sb.toString() + "*";
 
