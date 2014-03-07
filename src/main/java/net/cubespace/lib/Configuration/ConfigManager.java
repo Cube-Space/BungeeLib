@@ -66,7 +66,7 @@ public class ConfigManager {
         plugin.getPluginLogger().info("Reloading all Configs");
 
         for(Map.Entry<String, Config> loadedConfig : configHashMap.entrySet()) {
-            plugin.getPluginLogger().debug("Trying to reload " + loadedConfig.getKey() + " for " + loadedConfig.getValue().getClass().getName());
+            plugin.getPluginLogger().debug("Trying to reload " + loadedConfig.getKey() + " for " + loadedConfig.getValue());
             try {
                 loadedConfig.getValue().reload();
             } catch (InvalidConfigurationException e) {
