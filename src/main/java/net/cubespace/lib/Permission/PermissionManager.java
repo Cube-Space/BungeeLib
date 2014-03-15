@@ -40,18 +40,38 @@ public class PermissionManager {
 
     public boolean has(CommandSender sender, String permission) {
         boolean useStorage = permissionStorageHashMap.containsKey(sender.getName());
+        boolean hasPermission = false;
 
         StringBuilder sb = new StringBuilder();
-        sb.append(prefix);
         for(int i = 0; i < permission.length(); i++) {
+            sb.append(permission.charAt(i));
             String check = sb.toString() + "*";
 
-            if ((useStorage && permissionStorageHashMap.get(sender.getName()).has(permission)) || sender.hasPermission(check)) {
-                return true;
+            if ((useStorage && permissionStorageHashMap.get(sender.getName()).has(check)) || sender.hasPermission(check)) {
+                hasPermission = true;
             }
         }
 
-        return (permissionStorageHashMap.containsKey(sender.getName()) && permissionStorageHashMap.get(sender.getName()).has(permission)) || (sender.hasPermission(permission));
+        if (!hasPermission && (useStorage && permissionStorageHashMap.get(sender.getName()).has(permission)) || sender.hasPermission(permission)) {
+            hasPermission = true;
+        }
+
+        sb = new StringBuilder();
+        sb.append("-");
+        for(int i = 0; i < permission.length(); i++) {
+            sb.append(permission.charAt(i));
+            String check = sb.toString() + "*";
+
+            if ((useStorage && permissionStorageHashMap.get(sender.getName()).has(check)) || sender.hasPermission(check)) {
+                hasPermission = false;
+            }
+        }
+
+        if (hasPermission && (useStorage && permissionStorageHashMap.get(sender.getName()).has("-" + permission)) || sender.hasPermission("-" + permission)) {
+            hasPermission = false;
+        }
+
+        return hasPermission;
     }
 
     public void remove(String player) {
