@@ -19,7 +19,6 @@ import java.util.HashMap;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 24.12.13 14:29
  */
 public class CubespacePlugin extends Plugin {
     private ReportManager reportManager;
@@ -37,8 +36,10 @@ public class CubespacePlugin extends Plugin {
     private PermissionManager permissionManager;
     private BindManager bindManager;
 
+    public String pluginChannel = (("CL-" + this.getClass().getSimpleName()).length() > 16) ? ("CL-" + this.getClass().getSimpleName()).substring(0,16) : "CL-" + this.getClass().getSimpleName();
+
     public void onEnable() {
-        getPluginMessageManager("CubespaceLibrary").finish();
+        getPluginMessageManager(pluginChannel).finish();
     }
 
     /**

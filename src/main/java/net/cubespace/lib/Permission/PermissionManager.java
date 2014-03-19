@@ -15,19 +15,19 @@ import java.util.HashMap;
  */
 public class PermissionManager {
     private HashMap<String, PermissionStorage> permissionStorageHashMap = new HashMap<>();
-    private String prefix;
+    private CubespacePlugin plugin;
 
     public PermissionManager(CubespacePlugin plugin) {
-        plugin.getPluginMessageManager("CubespaceLibrary").addPacketToRegister(null, PermissionRequest.class);
-        plugin.getPluginMessageManager("CubespaceLibrary").addPacketToRegister(null, PermissionResponse.class);
-        plugin.getPluginMessageManager("CubespaceLibrary").addListenerToRegister(null, new PluginMessageListener(this, plugin));
+        this.plugin = plugin;
+    }
+
+    public void setup() {
+        plugin.getPluginMessageManager(plugin.pluginChannel).addPacketToRegister(null, PermissionRequest.class);
+        plugin.getPluginMessageManager(plugin.pluginChannel).addPacketToRegister(null, PermissionResponse.class);
+        plugin.getPluginMessageManager(plugin.pluginChannel).addListenerToRegister(null, new PluginMessageListener(this, plugin));
 
         plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerJoinListener(plugin, this));
         plugin.getProxy().getPluginManager().registerListener(plugin, new PlayerQuitListener(plugin, this));
-    }
-
-    public void setup(String prefix) {
-        this.prefix = prefix;
     }
 
     public void create(String player) {
@@ -42,21 +42,27 @@ public class PermissionManager {
         boolean useStorage = permissionStorageHashMap.containsKey(sender.getName());
         boolean hasPermission = false;
 
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < permission.length(); i++) {
-            sb.append(permission.charAt(i));
-            String check = sb.toString() + "*";
+        if ((useStorage && permissionStorageHashMap.get(sender.getName()).has("*")) || sender.hasPermission("*")) {
+            hasPermission = true;
+        }
 
-            if ((useStorage && permissionStorageHashMap.get(sender.getName()).has(check)) || sender.hasPermission(check)) {
+        if (!hasPermission) {
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < permission.length(); i++) {
+                sb.append(permission.charAt(i));
+                String check = sb.toString() + "*";
+
+                if ((useStorage && permissionStorageHashMap.get(sender.getName()).has(check)) || sender.hasPermission(check)) {
+                    hasPermission = true;
+                }
+            }
+
+            if (!hasPermission && (useStorage && permissionStorageHashMap.get(sender.getName()).has(permission)) || sender.hasPermission(permission)) {
                 hasPermission = true;
             }
         }
 
-        if (!hasPermission && (useStorage && permissionStorageHashMap.get(sender.getName()).has(permission)) || sender.hasPermission(permission)) {
-            hasPermission = true;
-        }
-
-        sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append("-");
         for(int i = 0; i < permission.length(); i++) {
             sb.append(permission.charAt(i));
@@ -76,9 +82,5 @@ public class PermissionManager {
 
     public void remove(String player) {
         permissionStorageHashMap.remove(player);
-    }
-
-    public String getPrefix() {
-        return prefix;
     }
 }
