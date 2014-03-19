@@ -15,7 +15,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author geNAZt (fabian.fassbender42@googlemail.com)
- * @date Last changed: 29.12.13 13:29
  */
 public class PluginMessageManager {
     private PacketManager packetManager;
@@ -29,7 +28,7 @@ public class PluginMessageManager {
 
         packetManager = new BungeeCordPacketManager(plugin, channel);
 
-        plugin.getPluginLogger().info("Creating new PluginMessageManager for channel " + channel);
+        plugin.getPluginLogger().debug("Creating new PluginMessageManager for channel " + channel);
         plugin.getProxy().getScheduler().runAsync(plugin, new PluginMessageTask(this, plugin, channel));
     }
 

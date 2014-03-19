@@ -157,7 +157,7 @@ public class ModuleManager {
             modules.put(module.getName(), clazz);
             clazz.onLoad();
 
-            plugin.getPluginLogger().info(String.format("Loaded module %s version %s by %s", module.getName(), module.getVersion(), module.getAuthor()));
+            plugin.getPluginLogger().debug(String.format("Loaded module %s version %s by %s", module.getName(), module.getVersion(), module.getAuthor()));
         } catch (Throwable t) {
             plugin.getPluginLogger().warn("Error enabling module " + module.getName(), t);
         }
@@ -218,7 +218,7 @@ public class ModuleManager {
                 clazz.init(plugin, module);
                 modules.put(module.getName(), clazz);
                 clazz.onLoad();
-                plugin.getPluginLogger().info(String.format("Loaded module %s version %s by %s", module.getName(), module.getVersion(), module.getAuthor()));
+                plugin.getPluginLogger().debug(String.format("Loaded module %s version %s by %s", module.getName(), module.getVersion(), module.getAuthor()));
             } catch (Throwable t) {
                 plugin.getPluginLogger().warn("Error enabling module " + module.getName(), t);
             }

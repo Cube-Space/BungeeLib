@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Logger {
     //Hold the LogLevel for this Logger
-    private Level logLevel = Level.INFO;
+    private Level logLevel = Level.DEBUG;
     //Hold the plugin for this Logger (to get access to the ReportManager)
     private CubespacePlugin plugin;
     protected String prefix = "";
@@ -55,6 +55,10 @@ public class Logger {
      * @param logLevel
      */
     public void setLogLevel(Level logLevel) {
+        if (System.getProperty("overwriteLogLevel") != null) {
+            this.logLevel = Level.valueOf(System.getProperty("overwriteLogLevel"));
+        }
+
         this.logLevel = logLevel;
     }
 

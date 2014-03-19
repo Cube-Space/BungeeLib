@@ -32,7 +32,7 @@ public class CommandExecutor {
      * @param cliCommand The command class which contains @Command annotations
      */
     public void add(Module module, CLICommand cliCommand) {
-        plugin.getPluginLogger().info("Registered new Command " + cliCommand.toString());
+        plugin.getPluginLogger().debug("Registered new Command " + cliCommand.toString());
 
         for (Method method : cliCommand.getClass().getDeclaredMethods()) {
             //Check if Command Annotation is present

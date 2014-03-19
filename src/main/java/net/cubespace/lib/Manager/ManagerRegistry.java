@@ -23,7 +23,7 @@ public class ManagerRegistry {
      * @param manager The Manager itself
      */
     public void registerManager(String name, IManager manager) {
-        plugin.getPluginLogger().info("New Manager has been registered " + name + ": " + manager.toString());
+        plugin.getPluginLogger().debug("New Manager has been registered " + name + ": " + manager.toString());
 
         managerHashMap.put(name, manager);
     }
