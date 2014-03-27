@@ -15,6 +15,7 @@ import java.util.HashMap;
  */
 public class PermissionManager {
     private HashMap<String, PermissionStorage> permissionStorageHashMap = new HashMap<>();
+    private HashMap<String, PermissionStorage> receiveMap = new HashMap<>();
     private CubespacePlugin plugin;
 
     public PermissionManager(CubespacePlugin plugin) {
@@ -32,6 +33,14 @@ public class PermissionManager {
 
     public void create(String player) {
         permissionStorageHashMap.put(player, new PermissionStorage());
+    }
+
+    public void createNewReceive(String player) {
+        receiveMap.put(player, new PermissionStorage());
+    }
+
+    public PermissionStorage getReceive(String player) {
+        return receiveMap.get(player);
     }
 
     public PermissionStorage get(String player) {
@@ -82,5 +91,24 @@ public class PermissionManager {
 
     public void remove(String player) {
         permissionStorageHashMap.remove(player);
+        receiveMap.remove(player);
+    }
+
+    public void completeReceive(String player) {
+        if (receiveMap.containsKey(player)) {
+            if (receiveMap.get(player).amountOfPermissions() == 0) {
+                plugin.getPluginLogger().error("Could not get Permissions for " + player + ". The receive list was empty");
+                receiveMap.remove(player);
+
+                return;
+            }
+
+            permissionStorageHashMap.put(player, receiveMap.get(player));
+            receiveMap.remove(player);
+
+            return;
+        }
+
+        plugin.getPluginLogger().error("Completed a Permission request without beginning one. Player " + player);
     }
 }

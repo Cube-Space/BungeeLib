@@ -25,24 +25,24 @@ public class PluginMessageListener implements PacketListener {
         if(permissionManager.get(permissionResponse.getSender().getName()) == null) return;
 
         if(permissionResponse.getMode() == 0) {
-            //Clear permissions
-            permissionManager.get(permissionResponse.getSender().getName()).clear();
+            permissionManager.createNewReceive(permissionResponse.getSender().getName());
             return;
         }
 
         if(permissionResponse.getMode() == 1) {
             //Add permission
-            permissionManager.get(permissionResponse.getSender().getName()).add(permissionResponse.getPermission());
+            permissionManager.getReceive(permissionResponse.getSender().getName()).add(permissionResponse.getPermission());
         }
 
         if(permissionResponse.getMode() == 2) {
             //Ready
-            if(!permissionManager.get(permissionResponse.getSender().getName()).isResolved())
+            if(permissionManager.get(permissionResponse.getSender().getName()) == null) {
+                permissionManager.completeReceive(permissionResponse.getSender().getName());
                 plugin.getAsyncEventBus().callEvent(new PermissionLoadedEvent(permissionResponse.getSender().getName()));
-            else
+            } else {
+                permissionManager.completeReceive(permissionResponse.getSender().getName());
                 plugin.getAsyncEventBus().callEvent(new PermissionChangedEvent(permissionResponse.getSender().getName()));
-
-            permissionManager.get(permissionResponse.getSender().getName()).resolved();
+            }
         }
     }
 }

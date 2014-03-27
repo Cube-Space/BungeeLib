@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Logger {
     //Hold the LogLevel for this Logger
-    private Level logLevel = Level.DEBUG;
+    private Level logLevel = Level.INFO;
     //Hold the plugin for this Logger (to get access to the ReportManager)
     private CubespacePlugin plugin;
     protected String prefix = "";
