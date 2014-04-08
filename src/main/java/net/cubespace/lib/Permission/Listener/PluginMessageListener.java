@@ -22,7 +22,9 @@ public class PluginMessageListener implements PacketListener {
 
     @PacketHandler
     public void onPermissionResponse(PermissionResponse permissionResponse) {
-        if(permissionManager.get(permissionResponse.getSender().getName()) == null) return;
+        if(permissionResponse.getSender() == null ||
+           permissionResponse.getSender().getName() == null ||
+           permissionManager.get(permissionResponse.getSender().getName()) == null) return;
 
         if(permissionResponse.getMode() == 0) {
             permissionManager.createNewReceive(permissionResponse.getSender().getName());
@@ -31,7 +33,8 @@ public class PluginMessageListener implements PacketListener {
 
         if(permissionResponse.getMode() == 1) {
             //Add permission
-            permissionManager.getReceive(permissionResponse.getSender().getName()).add(permissionResponse.getPermission());
+            if (permissionResponse.getPermission() != null)
+                permissionManager.getReceive(permissionResponse.getSender().getName()).add(permissionResponse.getPermission());
         }
 
         if(permissionResponse.getMode() == 2) {
